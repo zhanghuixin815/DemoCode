@@ -95,13 +95,57 @@ Status CreateList1(LinkList *L){
     return OK;
 }
 
+//单向循环链表插入数据
+//1.插入的位置在首结点
+//判断插入的位置是否在首元结点上
+//创建新结点，并赋值给新结点
+Status InsertList(LinkList *L,int place,int num){
+    LinkList temp,target = NULL;
+    int i;
+    if (place == 1) {
+        //1.创建temp，判断成功与否
+        //2.通过循环找到链表最后一个结点
+        //3.新结点->next指向头结点*L
+        //4.尾结点->next指向新结点
+        //5.让*L指向新结点
+        temp = (LinkList)malloc(sizeof(Node));
+        if(temp == NULL) return ERROR;
+        temp->data = num;
+        temp->next = *L;
+        for (target = *L; target->next != *L; target = target->next);
+        target->next = temp;
+        *L = temp;
+    }else{
+        //1.创建temp，判断成功与否
+        //2.通过循环找到链表待插入位置的前一个结点target
+        //3.新结点->next指向target->next
+        //4.target->next指向temp
+        temp = (LinkList)malloc(sizeof(Node));
+        if(temp == NULL) return ERROR;
+        for (i = 1,target = *L; target->next != *L && i < place-1; target = target->next,i++);
+        temp->next = target->next;
+        temp->data = num;
+        target->next = temp;
+    }
+    return  OK;
+}
+
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
         // insert code here...
         NSLog(@"Hello, World!");
         LinkList L;
+        int place,num;
         CreateList1(&L);
         printf("初始链表为：\n");
+        ShowList(L);
+        printf("输入要插入的位置和数据:");
+        scanf("%d %d",&place,&num);
+        InsertList(&L, place, num);
+        ShowList(L);
+        printf("输入要插入的位置和数据:");
+        scanf("%d %d",&place,&num);
+        InsertList(&L, place, num);
         ShowList(L);
     }
     return 0;
