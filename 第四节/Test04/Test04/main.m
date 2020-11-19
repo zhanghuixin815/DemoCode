@@ -20,7 +20,7 @@ typedef struct Node{
 
 typedef struct Node *LinkList;
 
-//循环链表的创建
+//单向循环链表的创建
 /*
  2种情况：
  1⃣️ 第一次创建
@@ -130,6 +130,51 @@ Status InsertList(LinkList *L,int place,int num){
     return  OK;
 }
 
+//循环链表删除元素
+Status DeleteList(LinkList *L,int place){
+    LinkList temp,target;
+    int i;
+    temp = *L;
+    if (temp == NULL || place < 1) return  ERROR;
+    if (place == 1) {
+        //1.如果删除的是首元结点
+        //找到尾结点
+        //新结点作为头结点
+        for(target = *L;target->next != *L;target = target->next);
+        temp = *L;
+        *L = (*L)->next;
+        target->next = *L;
+        free(temp);
+    }else{
+        //2.删除其他位置的结点
+        //找到删除的位置的前一个结点 target
+        ///用一个临时变量指向待删除的结点temp
+        // target->next指向temp->next
+        //free temp
+        for (i = 1,target = *L; target->next != *L && i < place-1; target = target->next,i++);
+        temp = target->next;
+        target->next = temp->next;
+        free(temp);
+    }
+    return  OK;
+}
+
+//单向循环链表查询
+int FindValue(LinkList L,int value){
+    int i = 1;
+    LinkList p;
+    p = L;
+    while (p->data != value && p->next != L) {
+        i++;
+        p = p->next;
+        
+    }
+    if (p->data == value) {
+        return i;
+    }
+    return -1;
+}
+
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
         // insert code here...
@@ -139,14 +184,23 @@ int main(int argc, const char * argv[]) {
         CreateList1(&L);
         printf("初始链表为：\n");
         ShowList(L);
-        printf("输入要插入的位置和数据:");
-        scanf("%d %d",&place,&num);
-        InsertList(&L, place, num);
-        ShowList(L);
-        printf("输入要插入的位置和数据:");
-        scanf("%d %d",&place,&num);
-        InsertList(&L, place, num);
-        ShowList(L);
+//        printf("输入要插入的位置和数据:");
+//        scanf("%d %d",&place,&num);
+//        InsertList(&L, place, num);
+//        ShowList(L);
+//        printf("输入要删除的位置:");
+//        scanf("%d",&place);
+//        DeleteList(&L, place);
+//        ShowList(L);
+        printf("输入要查找的值:");
+        scanf("%d",&num);
+        place = FindValue(L, num);
+        if (place != -1) {
+            printf("找到的值的位置是:%d\n",place);
+        }else{
+            printf("未找到值\n");
+        }
+        
     }
     return 0;
 }
