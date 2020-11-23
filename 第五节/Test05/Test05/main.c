@@ -81,8 +81,8 @@ Status InsertList(LinkList *L,int place,Elemtype e){
     
 }
 
-//双向链表删除
-Status DeleteList(LinkList *L,int place,Elemtype *e){
+//双向链表删除(通过位置查找 删除)
+Status DeleteListByIndex(LinkList *L,int place,Elemtype *e){
     if(place < 1) return ERROR;
     LinkList p = *L;
     //判断链表是否为空，空的话不作操作
@@ -94,6 +94,23 @@ Status DeleteList(LinkList *L,int place,Elemtype *e){
     *e = delTemp->data;
     p->next = delTemp->next;
     if (delTemp->next != NULL) delTemp->next->prior = p;
+    free(delTemp);
+    return OK;
+}
+
+//双向链表删除(通过内容查找 删除,只删除发现的首个结点)
+Status DeleteListByContent(LinkList *L,Elemtype data){
+    LinkList p = *L;
+    while (p) {
+        if (p->data == data) {
+            //找到位置之后开始删除
+            p->prior->next = p->next;
+            if (p->next != NULL) p->next->prior = p->prior;
+            free(p);
+            break;
+        }
+        p = p->next;
+    }
     return OK;
 }
 int main() {
@@ -104,7 +121,9 @@ int main() {
     DisplayList(L);
     InsertList(&L, 11, 1);
     DisplayList(L);
-    DeleteList(&L, 12, &e);
+    DeleteListByContent(&L, 0);
+    DisplayList(L);
+    DeleteListByIndex(&L, 10, &e);
     DisplayList(L);
     printf("%d\n",e);
     return 0;
