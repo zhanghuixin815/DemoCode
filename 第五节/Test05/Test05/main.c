@@ -113,18 +113,41 @@ Status DeleteListByContent(LinkList *L,Elemtype data){
     }
     return OK;
 }
+
+//双向链表查找 替换
+Status ReplaceList(LinkList *L,Elemtype data,Elemtype e,Elemtype *place){
+    LinkList p = (*L)->next;
+    int i = 1;
+    while (p) {
+        if (p->data == data) {
+            //找到位置之后开始删除
+            p->data = e;
+            *place = i;
+            break;
+        }
+        i++;
+        p = p->next;
+    }
+    return OK;
+}
+
+
 int main() {
     printf("Hello, World!\n");
     LinkList L;
     Elemtype e;
+    Elemtype place;
     CreateList(&L);
     DisplayList(L);
     InsertList(&L, 11, 1);
     DisplayList(L);
-    DeleteListByContent(&L, 0);
+    DeleteListByContent(&L, 99);
     DisplayList(L);
-    DeleteListByIndex(&L, 10, &e);
-    DisplayList(L);
-    printf("%d\n",e);
+//    DeleteListByIndex(&L, 10, &e);
+//    DisplayList(L);
+//    printf("%d\n",e);
+//    ReplaceList(&L,1,2,&place);
+//    DisplayList(L);
+//    printf("%d\n",place);
     return 0;
 }
