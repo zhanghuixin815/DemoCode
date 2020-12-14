@@ -113,33 +113,122 @@ Status ListDeleteMinMax(LinkList *L,int min,int max){
 
 //倒置函数
 Status Reverse(int *array,int left,int right){
-    int p = left;
-    int q = right;
     int temp = 0;
-    while (p < q ) {
-        temp = array[p];
-        array[p] = array[q];
-        array[q] = temp;
-        p++;
-        q--;
+    while (left < right ) {
+        temp = array[left];
+        array[left] = array[right];
+        array[right] = temp;
+        left++;
+        right--;
     }
+    return OK;
+}
+
+Status ListLeftRight(int *array,int length,int index){
+    if (index > 0 && index < length) {
+        Reverse(array, 0, length - 1);
+        Reverse(array, 0, length - index - 1);
+        Reverse(array, length - index, length - 1);
+    }
+    return OK;
+}
+
+//题目：
+// 已知一个整数序列A = {a0,a1,a2,......,an-1},其中0 <= ai <= n,0 <= i <= n,若存在ap1 = ap2 = ...... = apm = x,且m>2/n (0 <= pk < n,1 <= k <= m),则称x为序列A的主元素。例如，A = {0,5,5,3,5,7,5,5} 则5为主元素；若B
+// = {0,5,5,3,5,1,5,7},则B没有主元素；现假设有n个元素保存在一个一维数组A中，设计尽可能高效的算法，找出A中主元素，如果存在主元素，返回主元素，不存在返回-1。
+//思路：
+//1.通过循环计数的方式找到出现次数最多的元素，设置候选主元素。
+//2.再次循环，查找候选人具体的出现次数。
+//3.将出现次数和数组长素进行比较，如果次数超一半，返回元素，没超过一半则返回-1。
+
+Status MainElemen(int *array,int lenth){
+    int count = 1;
+    int key = array[0];
+    for (int i = 1;i < lenth; i++) {
+        if (array[i] == key) {
+            count++;
+        }else{
+            if (count > 0) {
+                count--;
+            }else{
+                key = array[i];
+                count = 1;
+            }
+        }
+    }
+    
+    if (count > 0 ) {
+        int i = 0;
+        count = 0;
+        for (i = 0 , count = 0; i < lenth; i++) {
+            if(array[i] == key) count++;
+        }
+    }
+    
+    if (count > lenth/2) {
+        printf("主元素：%d 出现次数：%d\n",key,count);
+        return key;
+    }else{
+        printf("没找到主元素\n");
+        return -1;
+    }
+    
+}
+
+//题目：
+/**
+ 用单链表保存m个整数，结点的结构为(data,link),且data <= n(n为正整数)，请设计一个时间复杂度尽可能高效的算法，去掉链表内绝对值相等的结点，仅保留第一次出现的结点。例如：A = {21,-15,15,7,-15},删除完成后链表变成A = {21,-15,7}。
+ 
+ 思路：
+ 1.时间复杂度高 ==》 用空间换时间
+ 2.申请n+1个辅助空间数组B，赋初值0
+ 3.从首元结点遍历，检查B[|data|]
+ */
+
+Status DeleteEqualNode(LinkList *L,int n){
+    int *p = malloc(sizeof(int)*n);
+    for (int i = 0; i < n; i++) {
+        *(p+i) = 0;
+    }
+    LinkList r = (*L);
+    LinkList temp = (*L)->next;
+    while (temp != NULL) {
+        if (p[abs(temp->data)] == 1) {
+            r->next = temp->next;
+            free(temp);
+            temp = r->next;
+        }else{
+            p[abs(temp->data)] = 1;
+            r = temp;
+            temp = temp->next;
+        }
+    }
+    return OK;
 }
 int main(int argc, const char * argv[]) {
     // insert code here...
     printf("Hello, World!\n");
     LinkList L;
+//    int array[] = {0,0,5,5,1,5,5};
     ListInit(&L);
-    
-    ListInsert(&L,1,3);
-    ListInsert(&L,2,5);
-    ListInsert(&L,3,7);
-    ListInsert(&L,4,8);
-    ListInsert(&L,5,10);
-    ListInsert(&L,6,11);
-
+    ListInsert(&L,1,21);
+    ListInsert(&L,2,15);
+    ListInsert(&L,3,-15);
+    ListInsert(&L,4,7);
+    ListInsert(&L,5,15);
     ListDisplay(L);
+//    ListInsert(&L,6,11);
 //    ListInverse(&L);
-    ListDeleteMinMax(&L, 4, 9);
+//    ListDeleteMinMax(&L, 4, 9);
+//    ListDisplay(L);
+    
+//    ListLeftRight(&array, sizeof(array)/sizeof(array[0]), 3);
+//    for (int i = 0; i < sizeof(array)/sizeof(array[0]); i++) {
+//        printf("%d   ",array[i]);
+//    }
+//    MainElemen(array, 7);
+//    printf("\n");
+    DeleteEqualNode(&L, 21);
     ListDisplay(L);
     return 0;
 }

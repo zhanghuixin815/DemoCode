@@ -32,7 +32,7 @@ Status ListInit(sqlist *L){
 
 Status ListOutput(sqlist L){
     int i;
-    for (i         = 0; i < L.length; i++) {
+    for (i = 0; i < L.length; i++) {
         printf("%d\n",L.data[i]);
     }
     printf("\n");
