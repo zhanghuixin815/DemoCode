@@ -22,11 +22,11 @@ typedef struct {
 
 //1.初始化空表
 Status ListInit(sqlist *L){
-    L->data        = malloc(sizeof(ElemType)*MAXSIZE);
+    L->data = calloc(MAXSIZE, sizeof(ElemType));
     if (!L->data) {
         return ERROR;
     }
-    L->length      = 0;
+    L->length = 0;
     return OK;
 }
 
@@ -96,8 +96,6 @@ int main(int argc, const char * argv[]) {
         // insert code here...
         NSLog(@"Hello, World!");
         sqlist L;
-        sqlist Lb;
-        ElemType e;
         Status iStatus;
         iStatus = ListInit(&L);
         printf("%d\n",iStatus);

@@ -66,7 +66,7 @@ Status PushData(SqStack *S,SElemtype e){
 
 //7.出栈
 Status PopData(SqStack *S,SElemtype *e){
-    //判断栈是否满了
+    //判断栈是否为空
     if(S->top == -1) return ERROR;
     *e = S->data[S->top];
     S->top--;
